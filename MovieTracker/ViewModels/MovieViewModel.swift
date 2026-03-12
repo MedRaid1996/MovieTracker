@@ -160,4 +160,14 @@ class MovieViewModel: ObservableObject {
             movies[index].isFavorite.toggle()
         }
     }
+    
+    // Trie les films par titre (ordre alphabétique)
+    func sortByTitle() {
+        movies.sort { $0.title < $1.title }
+    }
+
+    // Trie les films par année (du plus ancien au plus récent)
+    func sortByYear() {
+        movies.sort { $0.year < $1.year }
+    }
 }

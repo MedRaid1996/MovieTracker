@@ -34,8 +34,8 @@ struct MovieRowView: View {
                 Text(movie.title)
                     .font(.headline)
                 
-                // Genre et année du film
-                Text("\(movie.genre) • \(movie.year)")
+                // Genre et année du film sans séparateur
+                Text("\(movie.genre) • \(movie.year, format: .number.grouping(.never))")
                     .font(.subheadline)
                     .foregroundColor(.gray)
             }

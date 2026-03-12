@@ -32,15 +32,15 @@ struct MovieDetailView: View {
                     .fontWeight(.bold)
                     .multilineTextAlignment(.center)
                 
-                // Genre et année
-                Text("\(movie.genre) • \(movie.year)")
+                // Genre et année sans séparateur
+                Text("\(movie.genre) • \(movie.year, format: .number.grouping(.never))")
                     .font(.title3)
                     .foregroundColor(.secondary)
                 
                 // Icône favori si le film est marqué comme favori
                 if movie.isFavorite {
-                    Label("Film favori", systemImage: "star.fill")
-                        .foregroundColor(.yellow)
+                    Label("Film favori", systemImage: "heart.fill")
+                        .foregroundColor(.red)
                         .font(.headline)
                 }
                 

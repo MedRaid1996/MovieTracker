@@ -68,8 +68,23 @@ struct MovieListView: View {
             }
             .navigationTitle("Mes films")
             .toolbar {
+
                 EditButton()
-                
+
+                // Menu de tri
+                Menu {
+                    Button("Sort by Title") {
+                        movieViewModel.sortByTitle()
+                    }
+
+                    Button("Sort by Year") {
+                        movieViewModel.sortByYear()
+                    }
+
+                } label: {
+                    Image(systemName: "arrow.up.arrow.down")
+                }
+
                 Button {
                     showFavoritesOnly.toggle()
                 } label: {
