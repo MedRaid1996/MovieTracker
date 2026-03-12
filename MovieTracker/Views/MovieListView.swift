@@ -6,52 +6,71 @@
 //
 
 import Foundation
-
 import SwiftUI
 
 // Vue principale qui affiche la liste des films
 struct MovieListView: View {
     
     // ViewModel utilisé pour gérer les données de la liste
-    @StateObject private var viewModel = MovieViewModel()
+    @StateObject private var movieViewModel = MovieViewModel()
+    
+    // Texte saisi dans la barre de recherche
+    @State private var searchText = ""
+    
+    // Liste filtrée selon la recherche
+    var filteredMovies: [Movie] {
+        if searchText.isEmpty {
+            return movieViewModel.movies
+        } else {
+            return movieViewModel.movies.filter {
+                $0.title.localizedCaseInsensitiveContains(searchText)
+            }
+        }
+    }
     
     var body: some View {
         NavigationStack {
             List {
-                // Boucle sur tous les films
-                ForEach(viewModel.movies) { movie in
+                // Boucle sur les films filtrés
+                ForEach(filteredMovies) { movie in
                     
                     NavigationLink(destination: MovieDetailView(movie: movie)) {
-                        MovieRowView(movie: movie)
-                    }
-                    // Rend toute la ligne interactive
-                    .contentShape(Rectangle())
-                    // Double tap pour ajouter ou retirer un favori
-                    .simultaneousGesture(
-                        TapGesture(count: 2)
-                            .onEnded {
-                                viewModel.toggleFavorite(for: movie)
+                        MovieRowView(
+                            movie: movie,
+                            onFavoriteTap: {
+                                movieViewModel.toggleFavorite(movie)
                             }
-                    )
+                        )
+                    }
                     // Menu affiché avec un appui long
                     .contextMenu {
                         Button {
-                            viewModel.toggleFavorite(for: movie)
+                            movieViewModel.toggleFavorite(movie)
                         } label: {
                             Label(
                                 movie.isFavorite ? "Retirer des favoris" : "Ajouter aux favoris",
-                                systemImage: movie.isFavorite ? "star.slash" : "star"
+                                systemImage: movie.isFavorite ? "heart.slash" : "heart"
                             )
                         }
                     }
                 }
                 // Suppression par swipe
-                .onDelete(perform: viewModel.deleteMovie)
+                .onDelete { indexSet in
+                    let moviesToDelete = indexSet.map { filteredMovies[$0] }
+                    
+                    for movie in moviesToDelete {
+                        if let realIndex = movieViewModel.movies.firstIndex(where: { $0.id == movie.id }) {
+                            movieViewModel.movies.remove(at: realIndex)
+                        }
+                    }
+                }
             }
             .navigationTitle("Mes films")
             .toolbar {
                 EditButton()
             }
+            // Barre de recherche
+            .searchable(text: $searchText, prompt: "Rechercher un film")
         }
     }
 }

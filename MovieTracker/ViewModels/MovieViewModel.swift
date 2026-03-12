@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Foundation
 
 // ViewModel responsable de gérer les données des films
 class MovieViewModel: ObservableObject {
@@ -155,8 +154,8 @@ class MovieViewModel: ObservableObject {
         movies.remove(atOffsets: offsets)
     }
     
-    // Ajouter ou retirer un film des favoris
-    func toggleFavorite(for movie: Movie) {
+    // Change l'état favori d'un film
+    func toggleFavorite(_ movie: Movie) {
         if let index = movies.firstIndex(where: { $0.id == movie.id }) {
             movies[index].isFavorite.toggle()
         }
