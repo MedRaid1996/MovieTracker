@@ -17,14 +17,15 @@ struct MovieListView: View {
     // Texte saisi dans la barre de recherche
     @State private var searchText = ""
     
-    // Liste filtrée selon la recherche
+    // Indique si on affiche seulement les favoris
+    @State private var showFavoritesOnly = false
+    
+    // Liste filtrée selon la recherche et les favoris
     var filteredMovies: [Movie] {
-        if searchText.isEmpty {
-            return movieViewModel.movies
-        } else {
-            return movieViewModel.movies.filter {
-                $0.title.localizedCaseInsensitiveContains(searchText)
-            }
+        movieViewModel.movies.filter { movie in
+            let matchesSearch = searchText.isEmpty || movie.title.localizedCaseInsensitiveContains(searchText)
+            let matchesFavorite = !showFavoritesOnly || movie.isFavorite
+            return matchesSearch && matchesFavorite
         }
     }
     
@@ -68,6 +69,13 @@ struct MovieListView: View {
             .navigationTitle("Mes films")
             .toolbar {
                 EditButton()
+                
+                Button {
+                    showFavoritesOnly.toggle()
+                } label: {
+                    Image(systemName: showFavoritesOnly ? "heart.fill" : "heart")
+                        .foregroundColor(.red)
+                }
             }
             // Barre de recherche
             .searchable(text: $searchText, prompt: "Rechercher un film")
