@@ -16,16 +16,15 @@ struct MovieDetailView: View {
     
     var body: some View {
         ScrollView {
-            
             VStack(spacing: 25) {
                 
-                // Icône représentant le film
-                Image(systemName: "film.fill")
+                // Poster du film en grand format
+                Image(movie.imageName)
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 120, height: 120)
-                    .foregroundColor(.blue)
-                    .padding()
+                    .frame(height: 300)
+                    .cornerRadius(16)
+                    .shadow(radius: 8)
                 
                 // Titre du film
                 Text(movie.title)
@@ -38,14 +37,20 @@ struct MovieDetailView: View {
                     .font(.title3)
                     .foregroundColor(.secondary)
                 
+                // Icône favori si le film est marqué comme favori
+                if movie.isFavorite {
+                    Label("Film favori", systemImage: "star.fill")
+                        .foregroundColor(.yellow)
+                        .font(.headline)
+                }
+                
                 Divider()
                 
                 // Description du film
                 Text(movie.description)
                     .font(.body)
-                    .padding()
-                
-                Spacer()
+                    .multilineTextAlignment(.leading)
+                    .padding(.horizontal)
             }
             .padding()
         }
@@ -63,6 +68,7 @@ struct MovieDetailView_Previews: PreviewProvider {
                 genre: "Science-fiction",
                 year: 2010,
                 description: "Un voleur infiltre les rêves pour voler des secrets.",
+                imageName: "inception",
                 isFavorite: false
             )
         )
