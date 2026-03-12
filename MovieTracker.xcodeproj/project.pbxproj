@@ -45,6 +45,7 @@
 		B07E18262F623A9A00AB09B7 = {
 			isa = PBXGroup;
 			children = (
+				B07E186B2F625E3B00AB09B7 /* README.md */,
 				B07E18312F623A9A00AB09B7 /* MovieTracker */,
 				B07E18302F623A9A00AB09B7 /* Products */,
 			);
@@ -67,7 +68,6 @@
 				B07E18322F623A9A00AB09B7 /* MovieTrackerApp.swift */,
 				B07E18362F623A9C00AB09B7 /* Assets.xcassets */,
 				B07E18382F623A9C00AB09B7 /* Preview Content */,
-				B07E186B2F625E3B00AB09B7 /* README.md */,
 			);
 			path = MovieTracker;
 			sourceTree = "<group>";
