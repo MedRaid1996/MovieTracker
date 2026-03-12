@@ -12,36 +12,43 @@ import SwiftUI
 // Vue principale qui affiche la liste des films
 struct MovieListView: View {
     
-    // ViewModel utilisé pour fournir les données à la vue
+    // ViewModel utilisé pour gérer les données de la liste
     @StateObject private var viewModel = MovieViewModel()
     
     var body: some View {
         NavigationStack {
             List {
-                // Boucle sur tous les films de la liste
+                // Boucle sur tous les films
                 ForEach(viewModel.movies) { movie in
+                    
                     NavigationLink(destination: MovieDetailView(movie: movie)) {
-                        VStack(alignment: .leading, spacing: 6) {
-                            
-                            // Titre du film
-                            Text(movie.title)
-                                .font(.headline)
-                            
-                            // Genre et année
-                            Text("\(movie.genre) • \(movie.year)")
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
+                        MovieRowView(movie: movie)
+                    }
+                    // Rend toute la ligne interactive
+                    .contentShape(Rectangle())
+                    // Double tap pour ajouter ou retirer un favori
+                    .simultaneousGesture(
+                        TapGesture(count: 2)
+                            .onEnded {
+                                viewModel.toggleFavorite(for: movie)
+                            }
+                    )
+                    // Menu affiché avec un appui long
+                    .contextMenu {
+                        Button {
+                            viewModel.toggleFavorite(for: movie)
+                        } label: {
+                            Label(
+                                movie.isFavorite ? "Retirer des favoris" : "Ajouter aux favoris",
+                                systemImage: movie.isFavorite ? "star.slash" : "star"
+                            )
                         }
-                        .padding(.vertical, 4)
                     }
                 }
-                // Permet de supprimer un film avec un swipe
+                // Suppression par swipe
                 .onDelete(perform: viewModel.deleteMovie)
             }
-            // Titre de la barre de navigation
             .navigationTitle("Mes films")
-            
-            // Bouton Edit pour activer la suppression
             .toolbar {
                 EditButton()
             }
@@ -49,7 +56,7 @@ struct MovieListView: View {
     }
 }
 
-// Preview de la vue dans Xcode
+// Preview SwiftUI
 struct MovieListView_Previews: PreviewProvider {
     static var previews: some View {
         MovieListView()
